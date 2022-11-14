@@ -21,13 +21,45 @@ RSpec.describe 'People', type: :request do
       it 'must return the first person attributes' do
         expect(json_body[0]).to include(:id, :full_name, :cpf, :cns, :email,
                                         :birth_date, :phone_number, :status,
-                                        :address)
+                                        :photo, :address)
       end
 
       it 'must return the address of the first person' do
         expect(json_body[0][:address]).to include(:id, :cep, :public_place,
                                                   :ibge_code, :city, :uf,
                                                   :district)
+      end
+    end
+
+    context 'list all People by a search params' do
+      let(:search_params) { 'Bender' }
+      let(:person1) do 
+        person = create(:person, full_name: 'Bender')
+        create(:address, person_id: person.id)
+      end
+      let(:person2) do 
+        person = create(:person, full_name: 'Allison')
+        create(:address, person_id: person.id)
+      end
+      let(:person3) do 
+        person = create(:person, full_name: 'Brian')
+        create(:address, person_id: person.id)
+      end
+
+      before do
+        person1
+        person2
+        person3
+
+        get "/people?full_name=#{search_params}"
+      end
+
+      it 'must return 200 status code' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "must return the first person with full_name equal to search_params" do
+        expect(json_body[0][:full_name]).to eq("Bender")
       end
     end
   end
@@ -48,7 +80,7 @@ RSpec.describe 'People', type: :request do
       it 'must return the person attributes' do
         expect(json_body).to include(:id, :full_name, :cpf, :cns, :email,
                                      :birth_date, :phone_number, :status,
-                                     :address)
+                                     :photo, :address)
       end
 
       it 'must return the address of the person' do
@@ -66,7 +98,7 @@ RSpec.describe 'People', type: :request do
                           email: 'johndoe@gmail.com', cns: '123123', status: 'active',
                           birth_date: '12-12-2022', phone_number: '82955552222',
                           address_attributes: { 
-                                                cep: '54098132', public_place: 'home',
+                                                cep: '29190400', public_place: 'home',
                                                 ibge_code: '093451223', city: 'chicago',
                                                 uf: 'illinois', district: 'lalaland'
                                               })
@@ -84,7 +116,7 @@ RSpec.describe 'People', type: :request do
       it 'must return the person attributes' do
         expect(json_body).to include(:id, :full_name, :cpf, :cns, :email,
                                      :birth_date, :phone_number, :status,
-                                     :address)
+                                     :photo, :address)
       end
 
       it 'must return the address of the person' do
@@ -98,7 +130,7 @@ RSpec.describe 'People', type: :request do
       let(:person_attributes) do 
         attributes_for(:person, full_name: nil, cpf: nil,
                         email: nil, cns: nil, status: nil,
-                        birth_date: nil, phone_number: nil,
+                        birth_date: nil, phone_number: nil, photo: nil,
                         address_attributes: { 
                                               cep: nil, public_place: nil,
                                               ibge_code: nil, city: nil,
@@ -130,7 +162,7 @@ RSpec.describe 'People', type: :request do
                         email: 'johndoe@gmail.com', cns: '123123', status: 'active',
                         birth_date: '12-12-2022', phone_number: '82955552222',
                         address_attributes: { 
-                                              cep: '54098132', public_place: 'home',
+                                              cep: '29190400', public_place: 'home',
                                               ibge_code: '093451223', city: 'chicago',
                                               uf: 'illinois', district: 'lalaland'
                                             })

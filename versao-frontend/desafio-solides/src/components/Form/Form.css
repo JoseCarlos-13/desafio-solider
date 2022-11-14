@@ -1,0 +1,20 @@
+form {
+    display: flex;
+    flex-direction: column;
+    margin: auto auto 100px auto;
+    padding: 30px;
+}
+
+form > .form-field {
+    margin: 5px;
+    width: 300px;
+}
+
+form > .upload-button {
+    margin: 5px;
+}
+
+form > .radio-buttons-div > .radio-buttons {
+    display: flex;
+    flex-direction: row;
+}

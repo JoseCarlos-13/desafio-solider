@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :address do
-    sequence(:cep) { |n| "0000000#{n}" }
+    cep { "29190400" }
     sequence(:public_place) { |n| "MyString#{n}" }
     complement { "MyString" }
     sequence(:district) { |n| "MyString#{n}" }

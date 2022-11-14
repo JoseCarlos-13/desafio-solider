@@ -2151,3 +2151,533 @@ FOREIGN KEY ("person_id")
   [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
   [1m[35m (1.3ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
   [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mBEGIN TRANSACTION; END;[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ?[0m  [["key", "environment"]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ?[0m  [["key", "environment"]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ?[0m  [["key", "environment"]]
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (10.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (10.0ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateMunicipes (20221111010141)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (11.3ms)[0m  [1m[35mCREATE TABLE "municipes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "full_name" varchar, "CPF" varchar, "CNS" varchar, "email" varchar, "birth_date" date, "phone_number" varchar, "status" integer, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20221111010141"]]
+  [1m[36mTRANSACTION (10.4ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateAddresses (20221111010605)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "addresses" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "CEP" varchar, "public_place" varchar, "complement" varchar, "district" varchar, "city" varchar, "UF" varchar, "IBGE_code" varchar, "municipe_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_10095b934a"
+FOREIGN KEY ("municipe_id")
+  REFERENCES "municipes" ("id")
+)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_addresses_on_municipe_id" ON "addresses" ("municipe_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20221111010605"]]
+  [1m[36mTRANSACTION (10.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to RenameCpfAndCnsColumnToMunicipes (20221111034007)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TEMPORARY TABLE "amunicipes" ("id" integer NOT NULL PRIMARY KEY, "full_name" varchar DEFAULT NULL, "cpf" varchar DEFAULT NULL, "CNS" varchar DEFAULT NULL, "email" varchar DEFAULT NULL, "birth_date" date DEFAULT NULL, "phone_number" varchar DEFAULT NULL, "status" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "amunicipes" ("id","full_name","cpf","CNS","email","birth_date","phone_number","status","created_at","updated_at")
+                     SELECT "id","full_name","CPF","CNS","email","birth_date","phone_number","status","created_at","updated_at" FROM "municipes"[0m
+  [1m[35m (0.8ms)[0m  [1m[35mDROP TABLE "municipes"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "municipes" ("id" integer NOT NULL PRIMARY KEY, "full_name" varchar DEFAULT NULL, "cpf" varchar DEFAULT NULL, "CNS" varchar DEFAULT NULL, "email" varchar DEFAULT NULL, "birth_date" date DEFAULT NULL, "phone_number" varchar DEFAULT NULL, "status" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "municipes" ("id","full_name","cpf","CNS","email","birth_date","phone_number","status","created_at","updated_at")
+                     SELECT "id","full_name","cpf","CNS","email","birth_date","phone_number","status","created_at","updated_at" FROM "amunicipes"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE "amunicipes"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.2ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TEMPORARY TABLE "amunicipes" ("id" integer NOT NULL PRIMARY KEY, "full_name" varchar DEFAULT NULL, "cpf" varchar DEFAULT NULL, "cns" varchar DEFAULT NULL, "email" varchar DEFAULT NULL, "birth_date" date DEFAULT NULL, "phone_number" varchar DEFAULT NULL, "status" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "amunicipes" ("id","full_name","cpf","cns","email","birth_date","phone_number","status","created_at","updated_at")
+                     SELECT "id","full_name","cpf","CNS","email","birth_date","phone_number","status","created_at","updated_at" FROM "municipes"[0m
+  [1m[35m (0.4ms)[0m  [1m[35mDROP TABLE "municipes"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "municipes" ("id" integer NOT NULL PRIMARY KEY, "full_name" varchar DEFAULT NULL, "cpf" varchar DEFAULT NULL, "cns" varchar DEFAULT NULL, "email" varchar DEFAULT NULL, "birth_date" date DEFAULT NULL, "phone_number" varchar DEFAULT NULL, "status" integer DEFAULT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "municipes" ("id","full_name","cpf","cns","email","birth_date","phone_number","status","created_at","updated_at")
+                     SELECT "id","full_name","cpf","cns","email","birth_date","phone_number","status","created_at","updated_at" FROM "amunicipes"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "amunicipes"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20221111034007"]]
+  [1m[36mTRANSACTION (8.8ms)[0m  [1m[36mcommit transaction[0m
+Migrating to RenameCepAndUfAndIbgeColumnsToAddresses (20221111034407)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aaddresses" ("id" integer NOT NULL PRIMARY KEY, "cep" varchar DEFAULT NULL, "public_place" varchar DEFAULT NULL, "complement" varchar DEFAULT NULL, "district" varchar DEFAULT NULL, "city" varchar DEFAULT NULL, "UF" varchar DEFAULT NULL, "IBGE_code" varchar DEFAULT NULL, "municipe_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aaddresses_on_municipe_id" ON "aaddresses" ("municipe_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aaddresses" ("id","cep","public_place","complement","district","city","UF","IBGE_code","municipe_id","created_at","updated_at")
+                     SELECT "id","CEP","public_place","complement","district","city","UF","IBGE_code","municipe_id","created_at","updated_at" FROM "addresses"[0m
+  [1m[35m (0.8ms)[0m  [1m[35mDROP TABLE "addresses"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "addresses" ("id" integer NOT NULL PRIMARY KEY, "cep" varchar DEFAULT NULL, "public_place" varchar DEFAULT NULL, "complement" varchar DEFAULT NULL, "district" varchar DEFAULT NULL, "city" varchar DEFAULT NULL, "UF" varchar DEFAULT NULL, "IBGE_code" varchar DEFAULT NULL, "municipe_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_10095b934a"
+FOREIGN KEY ("municipe_id")
+  REFERENCES "municipes" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_addresses_on_municipe_id" ON "addresses" ("municipe_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "addresses" ("id","cep","public_place","complement","district","city","UF","IBGE_code","municipe_id","created_at","updated_at")
+                     SELECT "id","cep","public_place","complement","district","city","UF","IBGE_code","municipe_id","created_at","updated_at" FROM "aaddresses"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "aaddresses"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aaddresses" ("id" integer NOT NULL PRIMARY KEY, "cep" varchar DEFAULT NULL, "public_place" varchar DEFAULT NULL, "complement" varchar DEFAULT NULL, "district" varchar DEFAULT NULL, "city" varchar DEFAULT NULL, "UF" varchar DEFAULT NULL, "ibge_code" varchar DEFAULT NULL, "municipe_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aaddresses_on_municipe_id" ON "aaddresses" ("municipe_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aaddresses" ("id","cep","public_place","complement","district","city","UF","ibge_code","municipe_id","created_at","updated_at")
+                     SELECT "id","cep","public_place","complement","district","city","UF","IBGE_code","municipe_id","created_at","updated_at" FROM "addresses"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "addresses"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "addresses" ("id" integer NOT NULL PRIMARY KEY, "cep" varchar DEFAULT NULL, "public_place" varchar DEFAULT NULL, "complement" varchar DEFAULT NULL, "district" varchar DEFAULT NULL, "city" varchar DEFAULT NULL, "UF" varchar DEFAULT NULL, "ibge_code" varchar DEFAULT NULL, "municipe_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_10095b934a"
+FOREIGN KEY ("municipe_id")
+  REFERENCES "municipes" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_addresses_on_municipe_id" ON "addresses" ("municipe_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "addresses" ("id","cep","public_place","complement","district","city","UF","ibge_code","municipe_id","created_at","updated_at")
+                     SELECT "id","cep","public_place","complement","district","city","UF","ibge_code","municipe_id","created_at","updated_at" FROM "aaddresses"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE "aaddresses"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aaddresses" ("id" integer NOT NULL PRIMARY KEY, "cep" varchar DEFAULT NULL, "public_place" varchar DEFAULT NULL, "complement" varchar DEFAULT NULL, "district" varchar DEFAULT NULL, "city" varchar DEFAULT NULL, "uf" varchar DEFAULT NULL, "ibge_code" varchar DEFAULT NULL, "municipe_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aaddresses_on_municipe_id" ON "aaddresses" ("municipe_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aaddresses" ("id","cep","public_place","complement","district","city","uf","ibge_code","municipe_id","created_at","updated_at")
+                     SELECT "id","cep","public_place","complement","district","city","UF","ibge_code","municipe_id","created_at","updated_at" FROM "addresses"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "addresses"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "addresses" ("id" integer NOT NULL PRIMARY KEY, "cep" varchar DEFAULT NULL, "public_place" varchar DEFAULT NULL, "complement" varchar DEFAULT NULL, "district" varchar DEFAULT NULL, "city" varchar DEFAULT NULL, "uf" varchar DEFAULT NULL, "ibge_code" varchar DEFAULT NULL, "municipe_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_10095b934a"
+FOREIGN KEY ("municipe_id")
+  REFERENCES "municipes" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_addresses_on_municipe_id" ON "addresses" ("municipe_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "addresses" ("id","cep","public_place","complement","district","city","uf","ibge_code","municipe_id","created_at","updated_at")
+                     SELECT "id","cep","public_place","complement","district","city","uf","ibge_code","municipe_id","created_at","updated_at" FROM "aaddresses"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "aaddresses"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20221111034407"]]
+  [1m[36mTRANSACTION (9.9ms)[0m  [1m[36mcommit transaction[0m
+Migrating to RenameMunicipeTableForPeople (20221111145318)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (1.5ms)[0m  [1m[35mALTER TABLE "municipes" RENAME TO "people"[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20221111145318"]]
+  [1m[36mTRANSACTION (9.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to RenameMunicipeReferenceForPersonReference (20221111145831)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TEMPORARY TABLE "aaddresses" ("id" integer NOT NULL PRIMARY KEY, "cep" varchar DEFAULT NULL, "public_place" varchar DEFAULT NULL, "complement" varchar DEFAULT NULL, "district" varchar DEFAULT NULL, "city" varchar DEFAULT NULL, "uf" varchar DEFAULT NULL, "ibge_code" varchar DEFAULT NULL, "person_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "tindex_aaddresses_on_municipe_id" ON "aaddresses" ("person_id")[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "aaddresses" ("id","cep","public_place","complement","district","city","uf","ibge_code","person_id","created_at","updated_at")
+                     SELECT "id","cep","public_place","complement","district","city","uf","ibge_code","municipe_id","created_at","updated_at" FROM "addresses"[0m
+  [1m[35m (0.6ms)[0m  [1m[35mDROP TABLE "addresses"[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "addresses" ("id" integer NOT NULL PRIMARY KEY, "cep" varchar DEFAULT NULL, "public_place" varchar DEFAULT NULL, "complement" varchar DEFAULT NULL, "district" varchar DEFAULT NULL, "city" varchar DEFAULT NULL, "uf" varchar DEFAULT NULL, "ibge_code" varchar DEFAULT NULL, "person_id" integer NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_e760e37e14"
+FOREIGN KEY ("person_id")
+  REFERENCES "people" ("id")
+)[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE INDEX "index_addresses_on_municipe_id" ON "addresses" ("person_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[32mINSERT INTO "addresses" ("id","cep","public_place","complement","district","city","uf","ibge_code","person_id","created_at","updated_at")
+                     SELECT "id","cep","public_place","complement","district","city","uf","ibge_code","person_id","created_at","updated_at" FROM "aaddresses"[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "aaddresses"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_addresses_on_person_id" ON "addresses" ("person_id")[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP INDEX "index_addresses_on_municipe_id"[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20221111145831"]]
+  [1m[36mTRANSACTION (10.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "development"], ["created_at", "2022-11-13 20:56:17.946252"], ["updated_at", "2022-11-13 20:56:17.946252"]]
+  [1m[36mTRANSACTION (10.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (2.0ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateActiveStorageTables (20221114011725)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "active_storage_blobs" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "key" varchar NOT NULL, "filename" varchar NOT NULL, "content_type" varchar, "metadata" text, "service_name" varchar NOT NULL, "byte_size" bigint NOT NULL, "checksum" varchar NOT NULL, "created_at" datetime NOT NULL)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_blobs_on_key" ON "active_storage_blobs" ("key")[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "active_storage_attachments" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "record_type" varchar NOT NULL, "record_id" bigint NOT NULL, "blob_id" bigint NOT NULL, "created_at" datetime NOT NULL, CONSTRAINT "fk_rails_c3b3935057"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE INDEX "index_active_storage_attachments_on_blob_id" ON "active_storage_attachments" ("blob_id")[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_attachments_uniqueness" ON "active_storage_attachments" ("record_type", "record_id", "name", "blob_id")[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "active_storage_variant_records" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "blob_id" bigint NOT NULL, "variation_digest" varchar NOT NULL, CONSTRAINT "fk_rails_993965df05"
+FOREIGN KEY ("blob_id")
+  REFERENCES "active_storage_blobs" ("id")
+)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_active_storage_variant_records_uniqueness" ON "active_storage_variant_records" ("blob_id", "variation_digest")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20221114011725"]]
+  [1m[36mTRANSACTION (13.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (2.0ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (1.7ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPerson Create (0.7ms)[0m  [1m[32mINSERT INTO "people" ("full_name", "cpf", "cns", "email", "birth_date", "phone_number", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["full_name", "MyString1"], ["cpf", "MyString1"], ["cns", "MyString1"], ["email", "MyString1"], ["birth_date", "2022-11-10"], ["phone_number", "MyString1"], ["status", 1], ["created_at", "2022-11-14 01:57:02.240500"], ["updated_at", "2022-11-14 01:57:02.240500"]]
+  [1m[36mActiveStorage::Blob Load (0.6ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" INNER JOIN "active_storage_attachments" ON "active_storage_blobs"."id" = "active_storage_attachments"."blob_id" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.2ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Create (0.5ms)[0m  [1m[32mINSERT INTO "active_storage_blobs" ("key", "filename", "content_type", "metadata", "service_name", "byte_size", "checksum", "created_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)[0m  [["key", "onq8q9i297vdpiytbjtg17l2c5zt"], ["filename", "ruby_symbol.png"], ["content_type", "image/png"], ["metadata", "{\"identified\":true}"], ["service_name", "local"], ["byte_size", 18820], ["checksum", "+0TJbNTw4D2mg3pllOFADw=="], ["created_at", "2022-11-14 01:57:02.334740"]]
+  [1m[36mActiveStorage::Attachment Create (0.5ms)[0m  [1m[32mINSERT INTO "active_storage_attachments" ("name", "record_type", "record_id", "blob_id", "created_at") VALUES (?, ?, ?, ?, ?)[0m  [["name", "photo"], ["record_type", "Person"], ["record_id", 1], ["blob_id", 1], ["created_at", "2022-11-14 01:57:02.339326"]]
+  [1m[36mPerson Update (0.3ms)[0m  [1m[33mUPDATE "people" SET "updated_at" = ? WHERE "people"."id" = ?[0m  [["updated_at", "2022-11-14 01:57:02.342372"], ["id", 1]]
+  [1m[36mTRANSACTION (11.7ms)[0m  [1m[36mcommit transaction[0m
+[36m  Disk Storage (1.9ms) [0m[32mUploaded file to key: onq8q9i297vdpiytbjtg17l2c5zt (checksum: +0TJbNTw4D2mg3pllOFADw==)[0m
+[ActiveJob] Enqueued ActiveStorage::AnalyzeJob (Job ID: 5e664c72-c551-4bb2-87aa-968776583d6e) to Async(default) with arguments: #<GlobalID:0x00007fa88ddaae48 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/1>>
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[36mActiveStorage::Blob Load (0.3ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [5e664c72-c551-4bb2-87aa-968776583d6e] Performing ActiveStorage::AnalyzeJob (Job ID: 5e664c72-c551-4bb2-87aa-968776583d6e) from Async(default) enqueued at 2022-11-14T01:57:02Z with arguments: #<GlobalID:0x00007fa88f192ff0 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/1>>
+[ActiveJob] [ActiveStorage::AnalyzeJob] [5e664c72-c551-4bb2-87aa-968776583d6e] [36m  Disk Storage (0.3ms) [0m[34mDownloaded file from key: onq8q9i297vdpiytbjtg17l2c5zt[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [5e664c72-c551-4bb2-87aa-968776583d6e] Skipping image analysis because the mini_magick gem isn't installed
+[ActiveJob] [ActiveStorage::AnalyzeJob] [5e664c72-c551-4bb2-87aa-968776583d6e]   [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [5e664c72-c551-4bb2-87aa-968776583d6e]   [1m[36mActiveStorage::Blob Update (1.2ms)[0m  [1m[33mUPDATE "active_storage_blobs" SET "metadata" = ? WHERE "active_storage_blobs"."id" = ?[0m  [["metadata", "{\"identified\":true,\"analyzed\":true}"], ["id", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [5e664c72-c551-4bb2-87aa-968776583d6e]   [1m[36mTRANSACTION (9.2ms)[0m  [1m[36mcommit transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [5e664c72-c551-4bb2-87aa-968776583d6e] Performed ActiveStorage::AnalyzeJob (Job ID: 5e664c72-c551-4bb2-87aa-968776583d6e) from Async(default) in 25.75ms
+  [1m[36mPerson Load (0.5ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPerson Load (0.2ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPerson Load (0.2ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPerson Load (0.2ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPerson Load (0.2ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPerson Destroy (10.9ms)[0m  [1m[31mDELETE FROM "people" WHERE "people"."id" = ?[0m  [["id", 1]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPerson Create (0.6ms)[0m  [1m[32mINSERT INTO "people" ("full_name", "cpf", "cns", "email", "birth_date", "phone_number", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["full_name", "MyString2"], ["cpf", "MyString2"], ["cns", "MyString2"], ["email", "MyString2"], ["birth_date", "2022-11-10"], ["phone_number", "MyString2"], ["status", 1], ["created_at", "2022-11-14 01:58:39.406358"], ["updated_at", "2022-11-14 01:58:39.406358"]]
+  [1m[36mActiveStorage::Blob Load (0.2ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" INNER JOIN "active_storage_attachments" ON "active_storage_blobs"."id" = "active_storage_attachments"."blob_id" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.2ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Destroy (0.7ms)[0m  [1m[31mDELETE FROM "active_storage_attachments" WHERE "active_storage_attachments"."id" = ?[0m  [["id", 1]]
+  [1m[36mActiveStorage::Blob Create (5.2ms)[0m  [1m[32mINSERT INTO "active_storage_blobs" ("key", "filename", "content_type", "metadata", "service_name", "byte_size", "checksum", "created_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)[0m  [["key", "s9wfmxj9vf5yly4hcb5xlmihhqe3"], ["filename", "ruby_symbol.png"], ["content_type", "image/png"], ["metadata", "{\"identified\":true}"], ["service_name", "local"], ["byte_size", 18820], ["checksum", "+0TJbNTw4D2mg3pllOFADw=="], ["created_at", "2022-11-14 01:58:39.431655"]]
+  [1m[36mActiveStorage::Attachment Create (0.3ms)[0m  [1m[32mINSERT INTO "active_storage_attachments" ("name", "record_type", "record_id", "blob_id", "created_at") VALUES (?, ?, ?, ?, ?)[0m  [["name", "photo"], ["record_type", "Person"], ["record_id", 1], ["blob_id", 2], ["created_at", "2022-11-14 01:58:39.443985"]]
+  [1m[36mPerson Update (0.4ms)[0m  [1m[33mUPDATE "people" SET "updated_at" = ? WHERE "people"."id" = ?[0m  [["updated_at", "2022-11-14 01:58:39.447985"], ["id", 1]]
+  [1m[36mTRANSACTION (11.2ms)[0m  [1m[36mcommit transaction[0m
+[36m  Disk Storage (1.0ms) [0m[32mUploaded file to key: s9wfmxj9vf5yly4hcb5xlmihhqe3 (checksum: +0TJbNTw4D2mg3pllOFADw==)[0m
+  [1m[36mActiveStorage::Blob Load (1.0ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+[ActiveJob] Enqueued ActiveStorage::PurgeJob (Job ID: 3965f836-0fca-46c6-a60a-d0d064f38fa9) to Async(default) with arguments: #<GlobalID:0x00007fa88c25a6e8 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/1>>
+[ActiveJob] Enqueued ActiveStorage::AnalyzeJob (Job ID: 9db41249-972d-470f-9fbf-34ef4cf3b72c) to Async(default) with arguments: #<GlobalID:0x00007fa88c25e630 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/2>>
+  [1m[36mPerson Load (6060.4ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[36mActiveStorage::Blob Load (0.3ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Load (0.3ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9db41249-972d-470f-9fbf-34ef4cf3b72c] Performing ActiveStorage::AnalyzeJob (Job ID: 9db41249-972d-470f-9fbf-34ef4cf3b72c) from Async(default) enqueued at 2022-11-14T01:58:39Z with arguments: #<GlobalID:0x00007fa88f0fe9e0 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/2>>
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9] Performing ActiveStorage::PurgeJob (Job ID: 3965f836-0fca-46c6-a60a-d0d064f38fa9) from Async(default) enqueued at 2022-11-14T01:58:39Z with arguments: #<GlobalID:0x00007fa88f100268 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/1>>
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9db41249-972d-470f-9fbf-34ef4cf3b72c] [36m  Disk Storage (0.3ms) [0m[34mDownloaded file from key: s9wfmxj9vf5yly4hcb5xlmihhqe3[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9db41249-972d-470f-9fbf-34ef4cf3b72c] Skipping image analysis because the mini_magick gem isn't installed
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9db41249-972d-470f-9fbf-34ef4cf3b72c]   [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9db41249-972d-470f-9fbf-34ef4cf3b72c]   [1m[36mActiveStorage::Blob Update (0.5ms)[0m  [1m[33mUPDATE "active_storage_blobs" SET "metadata" = ? WHERE "active_storage_blobs"."id" = ?[0m  [["metadata", "{\"identified\":true,\"analyzed\":true}"], ["id", 2]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9db41249-972d-470f-9fbf-34ef4cf3b72c]   [1m[36mTRANSACTION (9.9ms)[0m  [1m[36mcommit transaction[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9]   [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [9db41249-972d-470f-9fbf-34ef4cf3b72c] Performed ActiveStorage::AnalyzeJob (Job ID: 9db41249-972d-470f-9fbf-34ef4cf3b72c) from Async(default) in 39.94ms
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9]   [1m[36mActiveStorage::Attachment Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "active_storage_attachments" WHERE "active_storage_attachments"."blob_id" = ? LIMIT ?[0m  [["blob_id", 1], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9]   [1m[36mActiveStorage::VariantRecord Load (0.3ms)[0m  [1m[34mSELECT "active_storage_variant_records".* FROM "active_storage_variant_records" WHERE "active_storage_variant_records"."blob_id" = ?[0m  [["blob_id", 1]]
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9]   [1m[36mActiveStorage::Attachment Load (0.4ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "ActiveStorage::Blob"], ["name", "preview_image"], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9]   [1m[36mActiveStorage::Blob Destroy (9.7ms)[0m  [1m[31mDELETE FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ?[0m  [["id", 1]]
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9]   [1m[36mTRANSACTION (15.9ms)[0m  [1m[36mcommit transaction[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9] [36m  Disk Storage (1.0ms) [0m[31mDeleted file from key: onq8q9i297vdpiytbjtg17l2c5zt[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9] [36m  Disk Storage (0.1ms) [0m[31mDeleted files by key prefix: variants/onq8q9i297vdpiytbjtg17l2c5zt/[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [3965f836-0fca-46c6-a60a-d0d064f38fa9] Performed ActiveStorage::PurgeJob (Job ID: 3965f836-0fca-46c6-a60a-d0d064f38fa9) from Async(default) in 113.98ms
+  [1m[36mPerson Load (0.3ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.2ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Load (0.2ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[36mPerson Load (0.3ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.4ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Load (0.4ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mPerson Load (0.3ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.2ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Load (0.2ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[35m (2.3ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[36mPerson Load (0.8ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.4ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Load (0.5ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+  [1m[36mPerson Load (0.4ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPerson Destroy (20.0ms)[0m  [1m[31mDELETE FROM "people" WHERE "people"."id" = ?[0m  [["id", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPerson Create (0.5ms)[0m  [1m[32mINSERT INTO "people" ("full_name", "cpf", "cns", "email", "birth_date", "phone_number", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["full_name", "MyString1"], ["cpf", "MyString1"], ["cns", "MyString1"], ["email", "MyString1"], ["birth_date", "2022-11-10"], ["phone_number", "MyString1"], ["status", 1], ["created_at", "2022-11-14 02:00:44.765293"], ["updated_at", "2022-11-14 02:00:44.765293"]]
+  [1m[36mActiveStorage::Blob Load (0.4ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" INNER JOIN "active_storage_attachments" ON "active_storage_blobs"."id" = "active_storage_attachments"."blob_id" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.2ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Destroy (2.7ms)[0m  [1m[31mDELETE FROM "active_storage_attachments" WHERE "active_storage_attachments"."id" = ?[0m  [["id", 2]]
+  [1m[36mActiveStorage::Blob Create (0.4ms)[0m  [1m[32mINSERT INTO "active_storage_blobs" ("key", "filename", "content_type", "metadata", "service_name", "byte_size", "checksum", "created_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)[0m  [["key", "wjg1jdiwaokwec6k9vumrgtw9sdd"], ["filename", "ruby_symbol.png"], ["content_type", "image/png"], ["metadata", "{\"identified\":true}"], ["service_name", "local"], ["byte_size", 18820], ["checksum", "+0TJbNTw4D2mg3pllOFADw=="], ["created_at", "2022-11-14 02:00:44.793770"]]
+  [1m[36mActiveStorage::Attachment Create (0.2ms)[0m  [1m[32mINSERT INTO "active_storage_attachments" ("name", "record_type", "record_id", "blob_id", "created_at") VALUES (?, ?, ?, ?, ?)[0m  [["name", "photo"], ["record_type", "Person"], ["record_id", 1], ["blob_id", 3], ["created_at", "2022-11-14 02:00:44.797479"]]
+  [1m[36mPerson Update (0.2ms)[0m  [1m[33mUPDATE "people" SET "updated_at" = ? WHERE "people"."id" = ?[0m  [["updated_at", "2022-11-14 02:00:44.798953"], ["id", 1]]
+  [1m[36mTRANSACTION (11.7ms)[0m  [1m[36mcommit transaction[0m
+[36m  Disk Storage (2.3ms) [0m[32mUploaded file to key: wjg1jdiwaokwec6k9vumrgtw9sdd (checksum: +0TJbNTw4D2mg3pllOFADw==)[0m
+  [1m[36mActiveStorage::Blob Load (0.3ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+[ActiveJob] Enqueued ActiveStorage::PurgeJob (Job ID: 969d7868-52a9-4e36-a0bc-ef2ca4615058) to Async(default) with arguments: #<GlobalID:0x00007fa88c684ae8 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/2>>
+[ActiveJob] Enqueued ActiveStorage::AnalyzeJob (Job ID: 8b12cedc-8515-414f-9a07-ba39ce253720) to Async(default) with arguments: #<GlobalID:0x00007fa88c697490 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/3>>
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[36mActiveStorage::Blob Load (0.4ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [8b12cedc-8515-414f-9a07-ba39ce253720] Performing ActiveStorage::AnalyzeJob (Job ID: 8b12cedc-8515-414f-9a07-ba39ce253720) from Async(default) enqueued at 2022-11-14T02:00:44Z with arguments: #<GlobalID:0x00007fa88c600108 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/3>>
+  [1m[36mActiveStorage::Blob Load (0.4ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 2], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::PurgeJob] [969d7868-52a9-4e36-a0bc-ef2ca4615058] Performing ActiveStorage::PurgeJob (Job ID: 969d7868-52a9-4e36-a0bc-ef2ca4615058) from Async(default) enqueued at 2022-11-14T02:00:44Z with arguments: #<GlobalID:0x00007fa88c60df60 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/2>>
+[ActiveJob] [ActiveStorage::PurgeJob] [969d7868-52a9-4e36-a0bc-ef2ca4615058]   [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [8b12cedc-8515-414f-9a07-ba39ce253720] [36m  Disk Storage (5.9ms) [0m[34mDownloaded file from key: wjg1jdiwaokwec6k9vumrgtw9sdd[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [969d7868-52a9-4e36-a0bc-ef2ca4615058]   [1m[36mActiveStorage::Attachment Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "active_storage_attachments" WHERE "active_storage_attachments"."blob_id" = ? LIMIT ?[0m  [["blob_id", 2], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [8b12cedc-8515-414f-9a07-ba39ce253720] Skipping image analysis because the mini_magick gem isn't installed
+[ActiveJob] [ActiveStorage::PurgeJob] [969d7868-52a9-4e36-a0bc-ef2ca4615058]   [1m[36mActiveStorage::VariantRecord Load (0.2ms)[0m  [1m[34mSELECT "active_storage_variant_records".* FROM "active_storage_variant_records" WHERE "active_storage_variant_records"."blob_id" = ?[0m  [["blob_id", 2]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [8b12cedc-8515-414f-9a07-ba39ce253720]   [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [969d7868-52a9-4e36-a0bc-ef2ca4615058]   [1m[36mActiveStorage::Attachment Load (0.3ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 2], ["record_type", "ActiveStorage::Blob"], ["name", "preview_image"], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [8b12cedc-8515-414f-9a07-ba39ce253720]   [1m[36mActiveStorage::Blob Update (0.4ms)[0m  [1m[33mUPDATE "active_storage_blobs" SET "metadata" = ? WHERE "active_storage_blobs"."id" = ?[0m  [["metadata", "{\"identified\":true,\"analyzed\":true}"], ["id", 3]]
+[ActiveJob] [ActiveStorage::PurgeJob] [969d7868-52a9-4e36-a0bc-ef2ca4615058]   [1m[36mActiveStorage::Blob Destroy (0.7ms)[0m  [1m[31mDELETE FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ?[0m  [["id", 2]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [8b12cedc-8515-414f-9a07-ba39ce253720]   [1m[36mTRANSACTION (5008.0ms)[0m  [1m[36mcommit transaction[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [969d7868-52a9-4e36-a0bc-ef2ca4615058]   [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mrollback transaction[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [969d7868-52a9-4e36-a0bc-ef2ca4615058] Error performing ActiveStorage::PurgeJob (Job ID: 969d7868-52a9-4e36-a0bc-ef2ca4615058) from Async(default) in 5050.79ms: ActiveRecord::StatementInvalid (SQLite3::BusyException: database is locked):
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/statement.rb:108:in `step'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/statement.rb:108:in `block in each'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/statement.rb:107:in `loop'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/statement.rb:107:in `each'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/sqlite3/database_statements.rb:58:in `to_a'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/sqlite3/database_statements.rb:58:in `block (2 levels) in exec_query'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/dependencies/interlock.rb:48:in `block in permit_concurrent_loads'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/share_lock.rb:187:in `yield_shares'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/dependencies/interlock.rb:47:in `permit_concurrent_loads'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/sqlite3/database_statements.rb:49:in `block in exec_query'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract_adapter.rb:696:in `block (2 levels) in log'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:26:in `block (2 levels) in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `block in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract_adapter.rb:695:in `block in log'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/notifications/instrumenter.rb:24:in `instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract_adapter.rb:687:in `log'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/sqlite3/database_statements.rb:48:in `exec_query'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/sqlite3/database_statements.rb:76:in `exec_delete'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/database_statements.rb:185:in `delete'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/query_cache.rb:22:in `delete'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/persistence.rb:395:in `_delete_record'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/persistence.rb:877:in `_delete_row'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/persistence.rb:873:in `destroy_row'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/counter_cache.rb:176:in `destroy_row'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/locking/optimistic.rb:120:in `destroy_row'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/persistence.rb:539:in `destroy'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/callbacks.rb:439:in `block in destroy'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:106:in `run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:824:in `_run_destroy_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/callbacks.rb:439:in `destroy'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/transactions.rb:294:in `block in destroy'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/transactions.rb:354:in `block in with_transaction_returning_status'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/database_statements.rb:320:in `block in transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/transaction.rb:319:in `block in within_new_transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:26:in `block (2 levels) in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `block in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/transaction.rb:317:in `within_new_transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/database_statements.rb:320:in `transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/transactions.rb:350:in `with_transaction_returning_status'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/transactions.rb:294:in `destroy'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activestorage-6.1.7/app/models/active_storage/blob.rb:296:in `purge'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activestorage-6.1.7/app/jobs/active_storage/purge_job.rb:11:in `perform'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/execution.rb:48:in `block in perform_now'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:117:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/i18n-1.12.0/lib/i18n.rb:322:in `with_locale'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/translation.rb:9:in `block (2 levels) in <module:Translation>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/core_ext/time/zones.rb:66:in `use_zone'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/timezones.rb:9:in `block (2 levels) in <module:Timezones>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/instrumentation.rb:21:in `block in instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/notifications.rb:203:in `block in instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/notifications/instrumenter.rb:24:in `instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/notifications.rb:203:in `instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/instrumentation.rb:31:in `instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/instrumentation.rb:14:in `block (2 levels) in <module:Instrumentation>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/logging.rb:22:in `block in tag_logger'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/tagged_logging.rb:99:in `block in tagged'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/tagged_logging.rb:37:in `tagged'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/tagged_logging.rb:99:in `tagged'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/logging.rb:22:in `tag_logger'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/logging.rb:15:in `block (2 levels) in <module:Logging>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:137:in `run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/execution.rb:47:in `perform_now'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/execution.rb:25:in `block in execute'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:117:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/railtie.rb:47:in `block (4 levels) in <class:Railtie>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/execution_wrapper.rb:91:in `wrap'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/reloader.rb:72:in `block in wrap'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/execution_wrapper.rb:91:in `wrap'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/reloader.rb:71:in `wrap'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/railtie.rb:46:in `block (3 levels) in <class:Railtie>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:137:in `run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/execution.rb:23:in `execute'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/queue_adapters/async_adapter.rb:70:in `perform'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:352:in `run_task'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:343:in `block (3 levels) in create_worker'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:334:in `loop'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:334:in `block (2 levels) in create_worker'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:333:in `catch'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:333:in `block in create_worker'
+[ActiveJob] [ActiveStorage::AnalyzeJob] [8b12cedc-8515-414f-9a07-ba39ce253720]   [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mrollback transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [8b12cedc-8515-414f-9a07-ba39ce253720] Error performing ActiveStorage::AnalyzeJob (Job ID: 8b12cedc-8515-414f-9a07-ba39ce253720) from Async(default) in 5063.06ms: ActiveRecord::StatementInvalid (SQLite3::BusyException: database is locked):
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/resultset.rb:170:in `step'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/resultset.rb:170:in `next_hash'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/resultset.rb:105:in `next'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/resultset.rb:133:in `each'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/database.rb:207:in `to_a'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/database.rb:207:in `block in execute'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/database.rb:156:in `prepare'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/database.rb:198:in `execute'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/sqlite3-1.5.3-x86_64-linux/lib/sqlite3/database.rb:655:in `commit'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/sqlite3/database_statements.rb:95:in `block in commit_db_transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract_adapter.rb:696:in `block (2 levels) in log'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:26:in `block (2 levels) in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `block in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract_adapter.rb:695:in `block in log'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/notifications/instrumenter.rb:24:in `instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract_adapter.rb:687:in `log'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/sqlite3/database_statements.rb:95:in `commit_db_transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/transaction.rb:219:in `commit'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/transaction.rb:303:in `block in commit_transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:26:in `block (2 levels) in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `block in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/transaction.rb:294:in `commit_transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/transaction.rb:351:in `block in within_new_transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:26:in `block (2 levels) in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:25:in `block in synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `handle_interrupt'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/concurrency/load_interlock_aware_monitor.rb:21:in `synchronize'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/transaction.rb:317:in `within_new_transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/connection_adapters/abstract/database_statements.rb:320:in `transaction'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/transactions.rb:350:in `with_transaction_returning_status'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activerecord-6.1.7/lib/active_record/persistence.rb:637:in `update!'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activestorage-6.1.7/app/models/active_storage/blob/analyzable.rb:29:in `analyze'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activestorage-6.1.7/app/jobs/active_storage/analyze_job.rb:11:in `perform'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/execution.rb:48:in `block in perform_now'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:117:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/i18n-1.12.0/lib/i18n.rb:322:in `with_locale'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/translation.rb:9:in `block (2 levels) in <module:Translation>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/core_ext/time/zones.rb:66:in `use_zone'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/timezones.rb:9:in `block (2 levels) in <module:Timezones>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/instrumentation.rb:21:in `block in instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/notifications.rb:203:in `block in instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/notifications/instrumenter.rb:24:in `instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/notifications.rb:203:in `instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/instrumentation.rb:31:in `instrument'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/instrumentation.rb:14:in `block (2 levels) in <module:Instrumentation>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/logging.rb:22:in `block in tag_logger'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/tagged_logging.rb:99:in `block in tagged'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/tagged_logging.rb:37:in `tagged'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/tagged_logging.rb:99:in `tagged'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/logging.rb:22:in `tag_logger'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/logging.rb:15:in `block (2 levels) in <module:Logging>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:137:in `run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/execution.rb:47:in `perform_now'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/execution.rb:25:in `block in execute'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:117:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/railtie.rb:47:in `block (4 levels) in <class:Railtie>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/execution_wrapper.rb:91:in `wrap'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/reloader.rb:72:in `block in wrap'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/execution_wrapper.rb:91:in `wrap'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/reloader.rb:71:in `wrap'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/railtie.rb:46:in `block (3 levels) in <class:Railtie>'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `instance_exec'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:126:in `block in run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activesupport-6.1.7/lib/active_support/callbacks.rb:137:in `run_callbacks'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/execution.rb:23:in `execute'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/activejob-6.1.7/lib/active_job/queue_adapters/async_adapter.rb:70:in `perform'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:352:in `run_task'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:343:in `block (3 levels) in create_worker'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:334:in `loop'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:334:in `block (2 levels) in create_worker'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:333:in `catch'
+/home/jose-carlos/.asdf/installs/ruby/3.1.2/lib/ruby/gems/3.1.0/gems/concurrent-ruby-1.1.10/lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb:333:in `block in create_worker'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPerson Create (0.7ms)[0m  [1m[32mINSERT INTO "people" ("full_name", "cpf", "cns", "email", "birth_date", "phone_number", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["full_name", "MyString2"], ["cpf", "MyString2"], ["cns", "MyString2"], ["email", "MyString2"], ["birth_date", "2022-11-10"], ["phone_number", "MyString2"], ["status", 1], ["created_at", "2022-11-14 02:00:54.886649"], ["updated_at", "2022-11-14 02:00:54.886649"]]
+  [1m[36mActiveStorage::Blob Load (0.2ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" INNER JOIN "active_storage_attachments" ON "active_storage_blobs"."id" = "active_storage_attachments"."blob_id" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 2], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.2ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 2], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Create (0.6ms)[0m  [1m[32mINSERT INTO "active_storage_blobs" ("key", "filename", "content_type", "metadata", "service_name", "byte_size", "checksum", "created_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)[0m  [["key", "fcfcbpgk4d36hkicwdm19y0vd3we"], ["filename", "ruby_symbol.png"], ["content_type", "image/png"], ["metadata", "{\"identified\":true}"], ["service_name", "local"], ["byte_size", 18820], ["checksum", "+0TJbNTw4D2mg3pllOFADw=="], ["created_at", "2022-11-14 02:00:54.900058"]]
+  [1m[36mActiveStorage::Attachment Create (1.5ms)[0m  [1m[32mINSERT INTO "active_storage_attachments" ("name", "record_type", "record_id", "blob_id", "created_at") VALUES (?, ?, ?, ?, ?)[0m  [["name", "photo"], ["record_type", "Person"], ["record_id", 2], ["blob_id", 4], ["created_at", "2022-11-14 02:00:54.905376"]]
+  [1m[36mPerson Update (0.2ms)[0m  [1m[33mUPDATE "people" SET "updated_at" = ? WHERE "people"."id" = ?[0m  [["updated_at", "2022-11-14 02:00:54.910350"], ["id", 2]]
+  [1m[36mTRANSACTION (13.6ms)[0m  [1m[36mcommit transaction[0m
+[36m  Disk Storage (1.1ms) [0m[32mUploaded file to key: fcfcbpgk4d36hkicwdm19y0vd3we (checksum: +0TJbNTw4D2mg3pllOFADw==)[0m
+[ActiveJob] Enqueued ActiveStorage::AnalyzeJob (Job ID: 4a2ce643-7449-464a-985e-cb404c863c91) to Async(default) with arguments: #<GlobalID:0x00007fa88c60bb98 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/4>>
+  [1m[36mActiveStorage::Blob Load (0.2ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 4], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [4a2ce643-7449-464a-985e-cb404c863c91] Performing ActiveStorage::AnalyzeJob (Job ID: 4a2ce643-7449-464a-985e-cb404c863c91) from Async(default) enqueued at 2022-11-14T02:00:54Z with arguments: #<GlobalID:0x00007fa88c5c8320 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/4>>
+[ActiveJob] [ActiveStorage::AnalyzeJob] [4a2ce643-7449-464a-985e-cb404c863c91] [36m  Disk Storage (0.3ms) [0m[34mDownloaded file from key: fcfcbpgk4d36hkicwdm19y0vd3we[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [4a2ce643-7449-464a-985e-cb404c863c91] Skipping image analysis because the mini_magick gem isn't installed
+[ActiveJob] [ActiveStorage::AnalyzeJob] [4a2ce643-7449-464a-985e-cb404c863c91]   [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [4a2ce643-7449-464a-985e-cb404c863c91]   [1m[36mActiveStorage::Blob Update (0.4ms)[0m  [1m[33mUPDATE "active_storage_blobs" SET "metadata" = ? WHERE "active_storage_blobs"."id" = ?[0m  [["metadata", "{\"identified\":true,\"analyzed\":true}"], ["id", 4]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [4a2ce643-7449-464a-985e-cb404c863c91]   [1m[36mTRANSACTION (12.8ms)[0m  [1m[36mcommit transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [4a2ce643-7449-464a-985e-cb404c863c91] Performed ActiveStorage::AnalyzeJob (Job ID: 4a2ce643-7449-464a-985e-cb404c863c91) from Async(default) in 24.09ms
+  [1m[36mPerson Load (0.6ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPerson Destroy (18.5ms)[0m  [1m[31mDELETE FROM "people" WHERE "people"."id" = ?[0m  [["id", 2]]
+  [1m[36mPerson Load (0.3ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPerson Destroy (15.9ms)[0m  [1m[31mDELETE FROM "people" WHERE "people"."id" = ?[0m  [["id", 1]]
+  [1m[36mPerson Load (0.2ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPerson Create (0.6ms)[0m  [1m[32mINSERT INTO "people" ("full_name", "cpf", "cns", "email", "birth_date", "phone_number", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)[0m  [["full_name", "MyString3"], ["cpf", "MyString3"], ["cns", "MyString3"], ["email", "MyString3"], ["birth_date", "2022-11-10"], ["phone_number", "MyString3"], ["status", 1], ["created_at", "2022-11-14 02:01:06.103464"], ["updated_at", "2022-11-14 02:01:06.103464"]]
+  [1m[36mActiveStorage::Blob Load (0.2ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" INNER JOIN "active_storage_attachments" ON "active_storage_blobs"."id" = "active_storage_attachments"."blob_id" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.1ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Destroy (0.4ms)[0m  [1m[31mDELETE FROM "active_storage_attachments" WHERE "active_storage_attachments"."id" = ?[0m  [["id", 3]]
+  [1m[36mActiveStorage::Blob Create (0.4ms)[0m  [1m[32mINSERT INTO "active_storage_blobs" ("key", "filename", "content_type", "metadata", "service_name", "byte_size", "checksum", "created_at") VALUES (?, ?, ?, ?, ?, ?, ?, ?)[0m  [["key", "jwjx5x6sbs0q1g39djxosr9k88rp"], ["filename", "ruby_symbol.png"], ["content_type", "image/png"], ["metadata", "{\"identified\":true}"], ["service_name", "local"], ["byte_size", 18820], ["checksum", "+0TJbNTw4D2mg3pllOFADw=="], ["created_at", "2022-11-14 02:01:06.120821"]]
+  [1m[36mActiveStorage::Attachment Create (0.3ms)[0m  [1m[32mINSERT INTO "active_storage_attachments" ("name", "record_type", "record_id", "blob_id", "created_at") VALUES (?, ?, ?, ?, ?)[0m  [["name", "photo"], ["record_type", "Person"], ["record_id", 1], ["blob_id", 5], ["created_at", "2022-11-14 02:01:06.124020"]]
+  [1m[36mPerson Update (0.5ms)[0m  [1m[33mUPDATE "people" SET "updated_at" = ? WHERE "people"."id" = ?[0m  [["updated_at", "2022-11-14 02:01:06.128539"], ["id", 1]]
+  [1m[36mTRANSACTION (10.5ms)[0m  [1m[36mcommit transaction[0m
+[36m  Disk Storage (0.8ms) [0m[32mUploaded file to key: jwjx5x6sbs0q1g39djxosr9k88rp (checksum: +0TJbNTw4D2mg3pllOFADw==)[0m
+  [1m[36mActiveStorage::Blob Load (0.2ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+[ActiveJob] Enqueued ActiveStorage::PurgeJob (Job ID: aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c) to Async(default) with arguments: #<GlobalID:0x00007fa88c413750 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/3>>
+[ActiveJob] Enqueued ActiveStorage::AnalyzeJob (Job ID: b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8) to Async(default) with arguments: #<GlobalID:0x00007fa88c410348 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/5>>
+  [1m[36mActiveStorage::Blob Load (0.8ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 3], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Load (0.3ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c] Performing ActiveStorage::PurgeJob (Job ID: aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c) from Async(default) enqueued at 2022-11-14T02:01:06Z with arguments: #<GlobalID:0x00007fa88c3e5300 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/3>>
+[ActiveJob] [ActiveStorage::AnalyzeJob] [b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8] Performing ActiveStorage::AnalyzeJob (Job ID: b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8) from Async(default) enqueued at 2022-11-14T02:01:06Z with arguments: #<GlobalID:0x00007fa88c3bb500 @uri=#<URI::GID gid://desafio-da-solides/ActiveStorage::Blob/5>>
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c]   [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c]   [1m[36mActiveStorage::Attachment Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "active_storage_attachments" WHERE "active_storage_attachments"."blob_id" = ? LIMIT ?[0m  [["blob_id", 3], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c]   [1m[36mActiveStorage::VariantRecord Load (0.5ms)[0m  [1m[34mSELECT "active_storage_variant_records".* FROM "active_storage_variant_records" WHERE "active_storage_variant_records"."blob_id" = ?[0m  [["blob_id", 3]]
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c]   [1m[36mActiveStorage::Attachment Load (0.4ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 3], ["record_type", "ActiveStorage::Blob"], ["name", "preview_image"], ["LIMIT", 1]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8] [36m  Disk Storage (7.0ms) [0m[34mDownloaded file from key: jwjx5x6sbs0q1g39djxosr9k88rp[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c]   [1m[36mActiveStorage::Blob Destroy (0.6ms)[0m  [1m[31mDELETE FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ?[0m  [["id", 3]]
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c]   [1m[36mTRANSACTION (15.5ms)[0m  [1m[36mcommit transaction[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c] [36m  Disk Storage (4.5ms) [0m[31mDeleted file from key: wjg1jdiwaokwec6k9vumrgtw9sdd[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c] [36m  Disk Storage (0.5ms) [0m[31mDeleted files by key prefix: variants/wjg1jdiwaokwec6k9vumrgtw9sdd/[0m
+[ActiveJob] [ActiveStorage::PurgeJob] [aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c] Performed ActiveStorage::PurgeJob (Job ID: aa8ef8c3-ef92-4ceb-bcfb-08c0b52b0d3c) from Async(default) in 41.82ms
+[ActiveJob] [ActiveStorage::AnalyzeJob] [b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8] Skipping image analysis because the mini_magick gem isn't installed
+[ActiveJob] [ActiveStorage::AnalyzeJob] [b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8]   [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8]   [1m[36mActiveStorage::Blob Update (0.5ms)[0m  [1m[33mUPDATE "active_storage_blobs" SET "metadata" = ? WHERE "active_storage_blobs"."id" = ?[0m  [["metadata", "{\"identified\":true,\"analyzed\":true}"], ["id", 5]]
+[ActiveJob] [ActiveStorage::AnalyzeJob] [b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8]   [1m[36mTRANSACTION (12.6ms)[0m  [1m[36mcommit transaction[0m
+[ActiveJob] [ActiveStorage::AnalyzeJob] [b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8] Performed ActiveStorage::AnalyzeJob (Job ID: b0e8f947-79ad-4c91-9ce0-e3e9e3ec2cd8) from Async(default) in 78.11ms
+  [1m[36mPerson Load (0.3ms)[0m  [1m[34mSELECT "people".* FROM "people" ORDER BY "people"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mActiveStorage::Attachment Load (0.3ms)[0m  [1m[34mSELECT "active_storage_attachments".* FROM "active_storage_attachments" WHERE "active_storage_attachments"."record_id" = ? AND "active_storage_attachments"."record_type" = ? AND "active_storage_attachments"."name" = ? LIMIT ?[0m  [["record_id", 1], ["record_type", "Person"], ["name", "photo"], ["LIMIT", 1]]
+  [1m[36mActiveStorage::Blob Load (0.2ms)[0m  [1m[34mSELECT "active_storage_blobs".* FROM "active_storage_blobs" WHERE "active_storage_blobs"."id" = ? LIMIT ?[0m  [["id", 5], ["LIMIT", 1]]

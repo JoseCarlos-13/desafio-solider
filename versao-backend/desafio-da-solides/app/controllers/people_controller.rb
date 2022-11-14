@@ -3,6 +3,7 @@ class PeopleController < ApplicationController
 
   def index
     people = Person.all
+    people = people.search_person(params[:full_name])
 
     render json: people, 
            each_serializer: People::Index::PeopleSerializer,
@@ -41,7 +42,7 @@ class PeopleController < ApplicationController
 
   def person_params
     params.require(:person).permit(:full_name, :cpf, :cns, :email,
-                                   :birth_date, :phone_number, :status,
+                                   :birth_date, :phone_number, :photo, :status,
                                    address_attributes: [:cep, :public_place,
                                    :district, :city, :ibge_code, :uf])
   end
